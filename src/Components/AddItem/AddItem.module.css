@@ -1,0 +1,17 @@
+.addItemContainer {
+    padding: 20px;
+}
+input {
+    margin: 0 10px;
+}
+.newListInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    width: 20%;
+    margin: 1em auto;
+}
+.newListInputContainer > * {
+    margin: 0.5em;
+}
