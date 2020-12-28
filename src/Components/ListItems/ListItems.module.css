@@ -1,0 +1,39 @@
+.listItemsContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0;
+    overflow: scroll;
+}
+
+.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li.checkedItem {
+    list-style-type: none;
+    margin: 5px 0;
+    color: black;
+    text-decoration: line-through;
+    cursor: pointer;
+}
+
+li.uncheckedItem {
+    list-style-type: none;
+    margin: 5px 0;
+    color: red;
+    cursor: pointer;
+}
+
+.checked,
+.unchecked {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.delete {
+    cursor: pointer;
+}
