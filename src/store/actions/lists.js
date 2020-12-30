@@ -1,6 +1,5 @@
 import axios from '../../axios-shoppingList';
-export const ADD_ITEM = 'ADD_ITEM';
-export const DELETE_ITEM = 'DELETE_ITEM';
+
 export const LOAD_ALL_LISTS = 'LOAD_ALL_LISTS';
 export const LOAD_ALL_LISTS_FAILURE = 'LOAD_ALL_LISTS_FAILURE';
 export const SET_LIST = 'SET_LIST';
@@ -26,18 +25,17 @@ export const loadAllLists = () => {
                 return dispatch(loadAllListsFailure('Failed to load lists'));
             }
             dispatch(loadAllListsRequest(res.data));
-            // dispatch(setList());
         });
     };
 };
 
 export const setList = (lists, listId) => {
     let selectedListId = listId;
-    let selectedList = lists[selectedListId];
+    let selectedList = Object.keys(lists[selectedListId]);
 
     if (!listId) {
         selectedListId = Object.keys(lists)[0];
-        selectedList = lists[selectedListId];
+        selectedList = [selectedListId, lists[selectedListId]];
     }
 
     return {

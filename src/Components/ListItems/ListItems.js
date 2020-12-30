@@ -12,15 +12,14 @@ import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 const ListItems = (props) => {
     const items = [];
     if (props.selectedList) {
-        props.selectedList.items.forEach((item, index) => {
+        Object.keys(props.selectedList[1].items).forEach((item, index) => {
+            const { name, id, checked } = props.selectedList[1].items[item];
             return items.push(
-                <div key={item.id} className={classes.listItem}>
+                <div key={id} className={classes.listItem}>
                     {props.newListEditMode && (
                         <input
                             type="checkbox"
-                            onClick={() =>
-                                props.addItemToNewList(item.name, item.id)
-                            }
+                            onClick={() => props.addItemToNewList(name, id)}
                         />
                     )}
                     {!props.newListEditMode && (
@@ -31,26 +30,26 @@ const ListItems = (props) => {
                     )}
                     <li
                         className={
-                            item.checked
+                            checked
                                 ? classes.checkedItem
                                 : classes.uncheckedItem
                         }
-                        onClick={() => props.toggleEdit(item.name, item.id)}
+                        onClick={() => props.toggleEdit(name, id)}
                     >
-                        {item.name}
+                        {name}
                     </li>
-                    {item.checked ? (
+                    {checked ? (
                         <RiCheckboxCircleLine
                             className={classes.checked}
                             onClick={() =>
-                                props.toggleCheck(item.id, index, item.checked)
+                                props.toggleCheck(id, index, checked)
                             }
                         />
                     ) : (
                         <RiCheckboxBlankCircleLine
                             className={classes.unchecked}
                             onClick={() =>
-                                props.toggleCheck(item.id, index, item.checked)
+                                props.toggleCheck(id, index, checked)
                             }
                         />
                     )}

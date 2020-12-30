@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import AddItem from '../../Components/AddItem/AddItem';
 import ListItems from '../../Components/ListItems/ListItems';
 import helpers from '../../helperFunctions';
-import { setList } from '../../store/actions/actions';
+import { setList } from '../../store/actions/lists';
 import { connect } from 'react-redux';
 
 import axios from '../../axios-shoppingList';
@@ -218,7 +218,7 @@ class ListView extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        selectedList: state.selectedList,
+        selectedList: state.lists.selectedList,
     };
 };
 
