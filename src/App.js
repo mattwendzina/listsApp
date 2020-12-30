@@ -8,7 +8,7 @@ import Layout from './Components/Layout/Layout';
 import ListView from './Containers/ListView/ListView';
 import ListsOverview from './Components/ListsOverview/ListsOverview';
 import helpers from './helperFunctions';
-import { loadAllLists } from './store/actions/actions';
+import { loadAllLists } from './store/actions/lists';
 class App extends Component {
     state = {
         input: '',
@@ -71,7 +71,6 @@ class App extends Component {
     };
 
     update = (input) => {
-        console.log('UPDATE: ');
         if (input.type !== 'click' && input.key !== 'Enter') {
             return;
         }
@@ -213,8 +212,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        allLists: state.listItems,
-        error: state.errorMessage,
+        allLists: state.lists.listItems,
+        error: state.lists.errorMessage,
     };
 };
 

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { onSubmit } from '../../store/actions/items';
 
 import classes from './AddItem.module.css';
 import InputEl from '../UI/Input/InputEl';
 
 const AddItem = (props) => {
+    const [text, updateText] = useState('');
+
     const inputChangedHandler = (event, inputIdentifier) => {
         const updatedInputForm = {
             ...props.inputElements,
@@ -18,6 +22,14 @@ const AddItem = (props) => {
             updatedInputForm[inputIdentifier];
     };
 
+    const onTextChange = (event) => updateText(event.target.value);
+    // const onBlur = (input) => {
+    //     if (input.key && input.key !== 'Enter') {
+    //         return;
+    //     }
+    //     submitNewTitle();
+    // };
+
     const inputElementsArray = [];
     for (let key in props.inputElements) {
         inputElementsArray.push({
@@ -27,7 +39,10 @@ const AddItem = (props) => {
     }
 
     return !props.newListEditMode ? (
-        <div className={classes.addItemContainer}>
+        <form
+            className={classes.addItemContainer}
+            onSubmit={(event) => onSubmit(event, text, props.selectedList)}
+        >
             <label htmlFor="input">Add Item</label>
             {props.editMode.edit ? (
                 <input
@@ -38,20 +53,26 @@ const AddItem = (props) => {
                     value={props.value}
                 />
             ) : (
-                <input
-                    type="input"
-                    id="input"
-                    onChange={props.input}
-                    onKeyDown={props.submit}
-                    value={props.value}
+                <InputEl
+                    elementType="input"
+                    className="addItem"
+                    value={text}
+                    changed={onTextChange}
                 />
             )}
             {props.editMode.edit ? (
                 <button onClick={props.update}>Update</button>
             ) : (
-                <button onClick={props.submit}>Submit</button>
+                <button
+                    onClick={(event) => {
+                        props.onSubmit(event, text, props.selectedList);
+                        updateText('');
+                    }}
+                >
+                    Submit
+                </button>
             )}
-        </div>
+        </form>
     ) : (
         <div className={classes.newListInputContainer}>
             {inputElementsArray.map((inputElement) => {
@@ -75,4 +96,18 @@ const AddItem = (props) => {
     );
 };
 
-export default AddItem;
+const mapStateToProps = (state) => {
+    return {
+        inputText: state.input.inputText,
+        selectedList: state.lists.selectedList,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSubmit: (event, text, selectedList) =>
+            dispatch(onSubmit(event, text, selectedList)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

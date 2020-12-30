@@ -1,6 +1,7 @@
-.input {
+.inputContainer {
     width: 100%;
     box-sizing: border-box;
+    padding: 0.5em 0em 1em 0;
 }
 
 .label {
@@ -15,8 +16,10 @@
     background-color: white;
     font: inherit;
     display: block;
-    width: 100%;
+    /* width: 100%; */
     box-sizing: border-box;
+    margin: 0 auto;
+    border-radius: 5px;
 }
 
 .inputElement:focus {

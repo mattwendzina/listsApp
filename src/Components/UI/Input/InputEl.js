@@ -52,7 +52,7 @@ const InputEl = (props) => {
             );
     }
     return (
-        <div className={classes.input}>
+        <div className={classes.inputContainer}>
             {props.label && (
                 <label className={classes.label}>{props.label}</label>
             )}
