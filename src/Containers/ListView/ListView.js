@@ -218,72 +218,30 @@ class ListView extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        selectedList: state.lists.selectedList,
-    };
-};
+const mapStateToProps = (state) => ({
+    selectedList: state.lists.selectedList,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setList: (items) => dispatch(setList(items)),
-        toggleCheck: (id, checked, selectedList) =>
-            dispatch(toggleCheck(id, checked, selectedList)),
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    setList: (items) => dispatch(setList(items)),
+    toggleCheck: (id, checked, selectedList) =>
+        dispatch(toggleCheck(id, checked, selectedList)),
+});
 
-const mergeProps = (state, dispatch, ownProps) => {
-    return {
-        items: state.selectedList
-            ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
-                  const { name, id, checked } = state.selectedList[1].items[
-                      itemId
-                  ];
-                  return { name, id, checked, itemId };
-              })
-            : null,
-        ...state,
-        ...dispatch,
-        ...ownProps,
-    };
-};
+const mergeProps = (state, dispatch, ownProps) => ({
+    items: state.selectedList
+        ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
+              const { name, id, checked } = state.selectedList[1].items[itemId];
+              return { name, id, checked, itemId };
+          })
+        : null,
+    ...state,
+    ...dispatch,
+    ...ownProps,
+});
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
     mergeProps
 )(ListView);
-
-// const mapDispatchToProps = (dispatch) => ({
-//     onDelete: (code) => {
-//         dispatch(apiRemoveFromBag(code));
-//         dispatch(cancelTimer(CLOSE_POPOVER_BAG_TIMER));
-//     },
-//     onChange: (code, quantity) => {
-//         dispatch(apiUpdateQuantity(code, quantity));
-//         dispatch(cancelTimer(CLOSE_POPOVER_BAG_TIMER));
-//     },
-// });
-
-// const mapStateToProps = ({ app, bag, promotions }) => ({
-//     ...bag,
-//     currency: app.config.currency,
-//     isEditable: !app.routing.pathname.includes('checkout'),
-//     promotions,
-// });
-
-// const flatten = (all, current) => [...all, ...current];
-// const hasCurrentLocation = (currentLocation) => (message) =>
-//     message.displayLocations.find((location) => location === currentLocation);
-
-// const mergeProps = (state, dispatch, ownProps) => ({
-//     ...state,
-//     promotionMessages: Object.keys(state.promotions)
-//         .map((key) => state.promotions[key].messages)
-//         .reduce(flatten, [])
-//         .filter(hasCurrentLocation(ownProps.location)),
-//     ...dispatch,
-//     ...ownProps,
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Bag);
