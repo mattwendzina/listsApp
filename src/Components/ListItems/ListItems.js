@@ -17,20 +17,19 @@ const ListItems = (props) => {
         updateLocalCheckedStatus(() => {
             const localCheckedStatus = [];
             if (props.selectedList) {
-                Object.keys(props.selectedList[1].items).forEach((itemId) => {
-                    const { checked } = props.selectedList[1].items[itemId];
+                props.items.forEach(({ checked, itemId }) => {
                     return localCheckedStatus.push({ itemId, checked });
                 });
             }
             return localCheckedStatus;
         });
-    }, [props.selectedList]);
+    }, [props.selectedList, props.items]);
 
     const items = [];
+
     if (props.selectedList) {
-        Object.keys(props.selectedList[1].items).forEach((itemId, idx) => {
-            const { name, id, checked } = props.selectedList[1].items[itemId];
-            return items.push(
+        props.items.forEach(({ name, id, checked, itemId }, idx) =>
+            items.push(
                 <div key={id} className={classes.listItem}>
                     {props.newListEditMode && (
                         <input
@@ -107,8 +106,8 @@ const ListItems = (props) => {
                         />
                     )}
                 </div>
-            );
-        });
+            )
+        );
     }
     return (
         <div>

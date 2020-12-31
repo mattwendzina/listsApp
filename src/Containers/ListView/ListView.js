@@ -200,6 +200,7 @@ class ListView extends Component {
                 />
                 <ListItems
                     selectedList={this.props.selectedList}
+                    items={this.props.items}
                     deleteConfirmationWarning={
                         this.state.deleteConfirmationWarning
                     }
@@ -231,4 +232,58 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListView);
+const mergeProps = (state, dispatch, ownProps) => {
+    return {
+        items: state.selectedList
+            ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
+                  const { name, id, checked } = state.selectedList[1].items[
+                      itemId
+                  ];
+                  return { name, id, checked, itemId };
+              })
+            : null,
+        ...state,
+        ...dispatch,
+        ...ownProps,
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+)(ListView);
+
+// const mapDispatchToProps = (dispatch) => ({
+//     onDelete: (code) => {
+//         dispatch(apiRemoveFromBag(code));
+//         dispatch(cancelTimer(CLOSE_POPOVER_BAG_TIMER));
+//     },
+//     onChange: (code, quantity) => {
+//         dispatch(apiUpdateQuantity(code, quantity));
+//         dispatch(cancelTimer(CLOSE_POPOVER_BAG_TIMER));
+//     },
+// });
+
+// const mapStateToProps = ({ app, bag, promotions }) => ({
+//     ...bag,
+//     currency: app.config.currency,
+//     isEditable: !app.routing.pathname.includes('checkout'),
+//     promotions,
+// });
+
+// const flatten = (all, current) => [...all, ...current];
+// const hasCurrentLocation = (currentLocation) => (message) =>
+//     message.displayLocations.find((location) => location === currentLocation);
+
+// const mergeProps = (state, dispatch, ownProps) => ({
+//     ...state,
+//     promotionMessages: Object.keys(state.promotions)
+//         .map((key) => state.promotions[key].messages)
+//         .reduce(flatten, [])
+//         .filter(hasCurrentLocation(ownProps.location)),
+//     ...dispatch,
+//     ...ownProps,
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Bag);
