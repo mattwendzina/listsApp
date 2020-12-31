@@ -3,6 +3,7 @@ import AddItem from '../../Components/AddItem/AddItem';
 import ListItems from '../../Components/ListItems/ListItems';
 import helpers from '../../helperFunctions';
 import { setList } from '../../store/actions/lists';
+import { toggleCheck } from '../../store/actions/items';
 import { connect } from 'react-redux';
 
 import axios from '../../axios-shoppingList';
@@ -225,6 +226,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setList: (items) => dispatch(setList(items)),
+        toggleCheck: (id, checked, selectedList) =>
+            dispatch(toggleCheck(id, checked, selectedList)),
     };
 };
 
