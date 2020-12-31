@@ -27,24 +27,6 @@ class App extends Component {
         this.props.getAllLists();
     }
 
-    toggleCheck = (id, index, checked) => {
-        let updatedItems = [...this.state.listItems];
-        updatedItems[index] = {
-            itemId: id,
-            name: updatedItems[index].name,
-            checked: !checked,
-        };
-        this.setState({ listItems: updatedItems });
-        axios
-            .patch(`/lists/${this.state.listId}/items/${index}/.json`, {
-                checked: !checked,
-            })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((e) => console.log(e));
-    };
-
     toggleEdit = (item, id) => {
         if (this.state.editMode.edit) {
             this.setState({
@@ -184,7 +166,6 @@ class App extends Component {
                                 listItems={this.state.listItems}
                                 listName={this.state.listName}
                                 listId={this.state.listId}
-                                toggleCheck={this.toggleCheck}
                                 toggleEdit={this.toggleEdit}
                                 update={this.update}
                                 editMode={this.state.editMode}
