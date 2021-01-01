@@ -1,6 +1,6 @@
+import axios from './axios-shoppingList';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import axios from './axios-shoppingList';
 import { connect } from 'react-redux';
 
 import './App.css';
@@ -19,7 +19,6 @@ class App extends Component {
         listId: null,
         allLists: [],
         itemToEdit: null,
-        showModal: false,
         editMode: { edit: false, id: null },
     };
 
@@ -39,49 +38,6 @@ class App extends Component {
             input: item,
             editMode: { edit: !this.state.editMode.edit, id: id },
         });
-    };
-
-    inputHandler = (input) => {
-        this.setState(
-            {
-                input: input.target.value,
-            },
-            () => {
-                console.log(this.state.input);
-            }
-        );
-    };
-
-    update = (input) => {
-        if (input.type !== 'click' && input.key !== 'Enter') {
-            return;
-        }
-        let index;
-        let updatedItems = [...this.state.listItems];
-
-        const itemToUpdate = updatedItems.find((item, idx) => {
-            if (item.id === this.state.editMode.id) {
-                index = idx;
-                return { ...item };
-            }
-        });
-        itemToUpdate.name = this.state.input;
-        updatedItems[index] = itemToUpdate;
-        this.setState({
-            input: '',
-            listItems: updatedItems,
-        });
-        axios
-            .patch(`/lists/${this.state.listId}/items/${index}/.json`, {
-                name: this.state.input,
-            })
-            .then((res) => {
-                this.setState({
-                    editMode: false,
-                });
-                console.log(res);
-            })
-            .catch((e) => console.log(e));
     };
 
     createNewList = () => {
@@ -163,14 +119,9 @@ class App extends Component {
                         component={() => (
                             <ListView
                                 allLists={this.props.allLists}
-                                listItems={this.state.listItems}
-                                listName={this.state.listName}
-                                listId={this.state.listId}
                                 toggleEdit={this.toggleEdit}
-                                update={this.update}
                                 editMode={this.state.editMode}
                                 input={this.state.input}
-                                inputHandler={this.inputHandler}
                             />
                         )}
                     />
