@@ -3,7 +3,11 @@ import AddItem from '../../Components/AddItem/AddItem';
 import ListItems from '../../Components/ListItems/ListItems';
 import helpers from '../../helperFunctions';
 import { setList } from '../../store/actions/lists';
-import { toggleCheck } from '../../store/actions/items';
+import {
+    deleteItem,
+    deleteWarningMessage,
+    toggleCheck,
+} from '../../store/actions/items';
 import { connect } from 'react-redux';
 
 import axios from '../../axios-shoppingList';
@@ -11,7 +15,6 @@ import axios from '../../axios-shoppingList';
 class ListView extends Component {
     state = {
         input: '',
-        editMode: { edit: false, id: null },
         newListEditMode: false,
         inputElements: {
             newItem: {
@@ -32,8 +35,6 @@ class ListView extends Component {
             },
         },
         listItems: null,
-        deleteConfirmationWarning: false,
-        deleteWarning: false,
     };
 
     componentDidMount() {
@@ -41,34 +42,6 @@ class ListView extends Component {
             this.props.setList(this.props.allLists);
         }
     }
-
-    addNewItem = (input) => {
-        console.log('ADD NEW ITEM: ', input);
-        if (input.type !== 'click' && input.key !== 'Enter') {
-            return;
-        }
-
-        let updatedList = [...this.props.listItems];
-
-        const newItem = {
-            id: helpers.randomId(),
-            name: this.state.input,
-            checked: false,
-        };
-
-        updatedList.push(newItem);
-
-        axios
-            .patch(`/lists/${this.props.listId}/.json`, {
-                items: updatedList,
-            })
-            .then((res) => {
-                this.props.getLists(this.props.listId);
-            })
-            .catch((e) => console.log(e));
-
-        this.setState({ input: '' });
-    };
 
     submitNewList = () => {
         axios
@@ -112,26 +85,6 @@ class ListView extends Component {
             .catch((e) => console.log(e));
     };
 
-    deleteItemMessage = (selectedItem) => {
-        this.setState({
-            deleteWarning: true,
-            itemToEdit: selectedItem,
-        });
-        return;
-    };
-
-    cancelDelete = () => {
-        this.setState(
-            {
-                deleteWarning: false,
-                itemId: null,
-            },
-            () => {
-                console.log(this.state);
-            }
-        );
-    };
-
     toggleEdit = (item, id) => {
         if (this.state.editMode.edit) {
             this.setState({
@@ -143,22 +96,6 @@ class ListView extends Component {
         this.setState({
             input: item,
             editMode: { edit: !this.state.editMode.edit, id: id },
-        });
-    };
-
-    confirmDelete = () => {
-        const updatedList = this.props.listItems.filter((item) => {
-            return item.id !== this.state.itemToEdit.id;
-        });
-
-        axios
-            .patch(`/lists/${this.props.listId}/.json`, {
-                items: updatedList,
-            })
-            .then(() => this.props.getLists())
-            .catch((e) => console.log(e));
-        this.setState({
-            deleteWarning: false,
         });
     };
 
@@ -174,27 +111,13 @@ class ListView extends Component {
         });
     };
 
-    inputHandler = (input) => {
-        this.setState(
-            {
-                input: input.target.value,
-            },
-            () => {
-                console.log(this.state.input);
-            }
-        );
-    };
-
     render() {
         return (
             <div>
                 <AddItem
                     newListEditMode={this.state.newListEditMode}
-                    inputElements={this.state.inputElements}
                     value={this.props.input}
                     editMode={this.props.editMode}
-                    input={this.inputHandler}
-                    submit={this.addNewItem}
                     update={this.props.update}
                     submitNewList={this.submitNewList}
                 />
@@ -204,13 +127,12 @@ class ListView extends Component {
                     deleteConfirmationWarning={
                         this.state.deleteConfirmationWarning
                     }
-                    showModal={this.state.deleteWarning}
                     newListEditMode={this.state.newListEditMode}
                     toggleCheck={this.props.toggleCheck}
                     toggleEdit={this.props.toggleEdit}
-                    deleteItemMessage={this.deleteItemMessage}
-                    confirmDelete={this.confirmDelete}
-                    cancelDelete={this.cancelDelete}
+                    deleteItem={this.props.deleteItem}
+                    deleteWarning={this.props.deleteWarning}
+                    deleteWarningMessage={this.props.deleteWarningMessage}
                     addItemToNewList={this.addItemToNewList}
                 />
             </div>
@@ -220,12 +142,17 @@ class ListView extends Component {
 
 const mapStateToProps = (state) => ({
     selectedList: state.lists.selectedList,
+    deleteWarning: state.items.deleteWarning,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setList: (items) => dispatch(setList(items)),
     toggleCheck: (id, checked, selectedList) =>
         dispatch(toggleCheck(id, checked, selectedList)),
+    deleteItem: (deleteWarning, selectedList, items, itemToDelete) =>
+        dispatch(deleteItem(deleteWarning, selectedList, items, itemToDelete)),
+    deleteWarningMessage: (deleteMessage) =>
+        dispatch(deleteWarningMessage(deleteMessage)),
 });
 
 const mergeProps = (state, dispatch, ownProps) => ({
