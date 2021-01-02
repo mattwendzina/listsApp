@@ -49,17 +49,12 @@ export const deleteConfirmed = () => {
     };
 };
 
-export const deleteItem = (
-    deleteWarning,
-    selectedList,
-    items,
-    itemToDelete
-) => {
+export const deleteItem = (deleteWarning, selectedList, itemToDelete) => {
     return (dispatch) => {
         if (!deleteWarning) {
             return dispatch(deleteWarningMessage(true));
         }
-        // When 'items' is passed to ListItems.js as a prop, it's formed so that it
+        // When 'items' is passed to ListItems.js as a prop, it's formed so that it includes itemId. The shape of data stored in Firebase is as such that it needs reshaping so that when the list is updated it's shape stays the same.
         const formattedList = Object.keys(selectedList[1].items).map(
             (itemId) => {
                 const { name, id, checked } = selectedList[1].items[itemId];

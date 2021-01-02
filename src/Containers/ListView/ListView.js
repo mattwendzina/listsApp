@@ -149,8 +149,8 @@ const mapDispatchToProps = (dispatch) => ({
     setList: (items) => dispatch(setList(items)),
     toggleCheck: (id, checked, selectedList) =>
         dispatch(toggleCheck(id, checked, selectedList)),
-    deleteItem: (deleteWarning, selectedList, items, itemToDelete) =>
-        dispatch(deleteItem(deleteWarning, selectedList, items, itemToDelete)),
+    deleteItem: (deleteWarning, selectedList, itemToDelete) =>
+        dispatch(deleteItem(deleteWarning, selectedList, itemToDelete)),
     deleteWarningMessage: (deleteMessage) =>
         dispatch(deleteWarningMessage(deleteMessage)),
 });
