@@ -10,37 +10,55 @@ import Backdrop from '../UI/Backdrop/Backdrop';
 import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 
 const ListItems = (props) => {
+    const {
+        selectedList,
+        items,
+        newListEditMode,
+        addItemToNewList,
+        deleteItem,
+        deleteWarning,
+        deleteWarningMessage,
+        toggleEdit,
+        toggleCheck,
+    } = props;
     const [localCheckedStatus, updateLocalCheckedStatus] = useState();
+    const [itemToDelete, setItemToDelete] = useState();
 
     // I want to be able to update the checkedItem status instantly, rather than relying on dispatching a reload of the lists from the server as this creates a short delay. Hence using useEffect()
     useEffect(() => {
         updateLocalCheckedStatus(() => {
             const localCheckedStatus = [];
-            if (props.selectedList) {
-                props.items.forEach(({ checked, itemId }) => {
-                    return localCheckedStatus.push({ itemId, checked });
+            if (selectedList) {
+                items.forEach(({ checked, id }) => {
+                    return localCheckedStatus.push({ id, checked });
                 });
             }
             return localCheckedStatus;
         });
-    }, [props.selectedList, props.items]);
+    }, [selectedList, items]);
 
-    const items = [];
+    const formattedItems = [];
 
-    if (props.selectedList) {
-        props.items.forEach(({ name, id, checked, itemId }, idx) =>
-            items.push(
+    if (selectedList) {
+        items.forEach(({ name, id, checked, itemId }, idx) => {
+            return formattedItems.push(
                 <div key={id} className={classes.listItem}>
-                    {props.newListEditMode && (
+                    {newListEditMode && (
                         <input
                             type="checkbox"
-                            onClick={() => props.addItemToNewList(name, id)}
+                            onClick={() => addItemToNewList(name, id)}
                         />
                     )}
-                    {!props.newListEditMode && (
+                    {!newListEditMode && (
                         <AiFillDelete
                             className={classes.delete}
-                            onClick={() => props.deleteItemMessage(itemId)}
+                            onClick={() => {
+                                deleteItem(deleteWarning);
+                                setItemToDelete(() => ({
+                                    id,
+                                    listId: selectedList[0],
+                                }));
+                            }}
                         />
                     )}
                     <li
@@ -52,7 +70,7 @@ const ListItems = (props) => {
                                 ? classes.checkedItem
                                 : classes.uncheckedItem
                         }
-                        onClick={() => props.toggleEdit(name, id)}
+                        onClick={() => toggleEdit(name, id)}
                     >
                         {name}
                     </li>
@@ -64,7 +82,7 @@ const ListItems = (props) => {
                             onClick={() => {
                                 updateLocalCheckedStatus((items) => {
                                     const updatedStatus = items.map((item) => {
-                                        if (item.itemId === itemId) {
+                                        if (item.id === id) {
                                             return {
                                                 ...item,
                                                 checked: !item.checked,
@@ -74,11 +92,7 @@ const ListItems = (props) => {
                                     });
                                     return updatedStatus;
                                 });
-                                props.toggleCheck(
-                                    itemId,
-                                    checked,
-                                    props.selectedList
-                                );
+                                toggleCheck(itemId, checked, selectedList);
                             }}
                         />
                     ) : (
@@ -87,7 +101,7 @@ const ListItems = (props) => {
                             onClick={() => {
                                 updateLocalCheckedStatus((items) => {
                                     const updatedStatus = items.map((item) => {
-                                        if (item.itemId === itemId) {
+                                        if (item.id === id) {
                                             return {
                                                 ...item,
                                                 checked: !item.checked,
@@ -97,27 +111,28 @@ const ListItems = (props) => {
                                     });
                                     return updatedStatus;
                                 });
-                                props.toggleCheck(
-                                    itemId,
-                                    checked,
-                                    props.selectedList
-                                );
+                                toggleCheck(itemId, checked, selectedList);
                             }}
                         />
                     )}
                 </div>
-            )
-        );
+            );
+        });
     }
     return (
         <div>
-            <ul className={classes.listItemsContainer}>{items}</ul>
-            <Modal showModal={props.showModal}>
+            <ul className={classes.listItemsContainer}>{formattedItems}</ul>
+            <Modal showModal={deleteWarning}>
                 <ConfirmDelete
                     confirmDelete={() =>
-                        props.confirmDelete(props.selectedList)
+                        deleteItem(
+                            deleteWarning,
+                            selectedList,
+                            items,
+                            itemToDelete
+                        )
                     }
-                    cancelDelete={props.cancelDelete}
+                    cancelDelete={() => deleteWarningMessage(false)}
                 />
             </Modal>
         </div>

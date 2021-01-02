@@ -11,10 +11,21 @@ const initialState = {
         value: { id: helpers.randomId(), name: null, checked: false },
     },
     inputText: '',
+    deleteWarning: false,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.ON_DELETE_WARNING:
+            return {
+                ...state,
+                deleteWarning: action.payload,
+            };
+        case actionTypes.ON_DELETE_CONFIRMED:
+            return {
+                ...state,
+                deleteWarning: false,
+            };
         // case actionTypes.ADD_ITEM:
         //     return {
         //         ...state,
@@ -29,10 +40,6 @@ const reducer = (state = initialState, action) => {
         //                 checked: true,
         //             },
         //         },
-        //     };
-        // case actionTypes.DELETE_ITEM:
-        //     return {
-        //         ...state,
         //     };
         default:
             return state;
