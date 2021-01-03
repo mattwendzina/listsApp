@@ -26,20 +26,6 @@ class App extends Component {
         this.props.getAllLists();
     }
 
-    toggleEdit = (item, id) => {
-        if (this.state.editMode.edit) {
-            this.setState({
-                input: '',
-                editMode: { edit: !this.state.editMode, id: null },
-            });
-            return;
-        }
-        this.setState({
-            input: item,
-            editMode: { edit: !this.state.editMode.edit, id: id },
-        });
-    };
-
     createNewList = () => {
         this.setState({
             newListEditMode: !this.state.newListEditMode,
@@ -119,7 +105,6 @@ class App extends Component {
                         component={() => (
                             <ListView
                                 allLists={this.props.allLists}
-                                toggleEdit={this.toggleEdit}
                                 editMode={this.state.editMode}
                                 input={this.state.input}
                             />
