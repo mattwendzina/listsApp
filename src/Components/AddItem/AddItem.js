@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { onSubmit } from '../../store/actions/items';
 
@@ -7,6 +7,12 @@ import InputEl from '../UI/Input/InputEl';
 
 const AddItem = (props) => {
     const [text, updateText] = useState('');
+
+    useEffect(() => {
+        if (props.itemToEdit) {
+            updateText(props.itemToEdit.name);
+        }
+    }, [props.itemToEdit]);
 
     const inputChangedHandler = (event, inputIdentifier) => {
         const updatedInputForm = {
@@ -22,7 +28,14 @@ const AddItem = (props) => {
             updatedInputForm[inputIdentifier];
     };
 
-    const onTextChange = (event) => updateText(event.target.value);
+    const onTextChange = (event) => {
+        if (event.key === 'Escape') {
+            updateText('');
+            props.onClearText();
+        }
+        updateText(event.target.value);
+    };
+
     // const onBlur = (input) => {
     //     if (input.key && input.key !== 'Enter') {
     //         return;
@@ -37,20 +50,27 @@ const AddItem = (props) => {
             config: props.inputElements[key],
         });
     }
-
     return !props.newListEditMode ? (
         <form
             className={classes.addItemContainer}
             onSubmit={(event) => onSubmit(event, text, props.selectedList)}
         >
             <label htmlFor="input">Add Item</label>
-            {props.editMode.edit ? (
-                <input
-                    type="input"
-                    id="input"
-                    onChange={props.input}
-                    onKeyDown={props.update}
-                    value={props.value}
+            {props.itemToEdit && props.itemToEdit.name ? (
+                <InputEl
+                    elementType="input"
+                    className="editItem"
+                    value={text}
+                    changed={onTextChange}
+                    keyUp={() => {
+                        updateText('');
+                        props.onClearText();
+                    }}
+                    blur={() => {
+                        updateText('');
+                        props.onClearText();
+                    }}
+                    autoFocus
                 />
             ) : (
                 <InputEl
@@ -60,7 +80,7 @@ const AddItem = (props) => {
                     changed={onTextChange}
                 />
             )}
-            {props.editMode.edit ? (
+            {props.itemToEdit ? (
                 <button onClick={props.update}>Update</button>
             ) : (
                 <button

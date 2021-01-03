@@ -6,6 +6,7 @@ export const ON_SUBMIT = 'ON_SUBMIT';
 export const ON_CHECK = 'ON_CHECK';
 export const ON_DELETE_WARNING = 'ON_DELETE_WARNING';
 export const ON_DELETE_CONFIRMED = 'ON_DELETE_CONFIRMED';
+export const ON_TOGGLE_EDIT = 'ON_TOGGLE_EDIT';
 
 export const onSubmit = (event, item, selectedList) => {
     event.preventDefault();
@@ -33,6 +34,14 @@ export const toggleCheck = (id, checked, selectedList) => {
                 dispatch(loadAllLists());
             })
             .catch((e) => console.log(e));
+    };
+};
+
+export const toggleEdit = (name, id) => {
+    const setItemToEdit = name ? { name, id } : null;
+    return {
+        type: ON_TOGGLE_EDIT,
+        payload: setItemToEdit,
     };
 };
 

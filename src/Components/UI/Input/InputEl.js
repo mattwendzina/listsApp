@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import classes from './InputEl.module.css';
 
 const InputEl = (props) => {
     let inputElement = null;
+    const editInputElement = useRef();
 
     const createClass = () => {
         const propClassNames = ['inputElement', props.className]
@@ -11,6 +12,13 @@ const InputEl = (props) => {
 
         return propClassNames;
     };
+
+    // Autofocus behaviour is difficult to activate when switching between items. This solution gets a reference to the input (ie - editInputElement = useRef()) and then updates it everytime there is a change in the input value (ie - `props.value)
+    useEffect(() => {
+        if (editInputElement.current && editInputElement.current.autofocus) {
+            editInputElement.current.focus();
+        }
+    }, [props.value]);
 
     switch (props.elementType) {
         case 'input':
@@ -24,6 +32,7 @@ const InputEl = (props) => {
                     onClick={props.click}
                     onKeyUp={props.keyUp}
                     onBlur={props.blur}
+                    ref={editInputElement}
                 />
             );
             break;
