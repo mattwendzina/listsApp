@@ -78,6 +78,15 @@ const AddItem = (props) => {
                         autoFocus
                     />
                     <button type="submit">Update</button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            updateText('');
+                            props.onToggleEdit();
+                        }}
+                    >
+                        Cancel
+                    </button>
                 </div>
             ) : (
                 <div>

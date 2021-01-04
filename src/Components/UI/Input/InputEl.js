@@ -29,9 +29,9 @@ const InputEl = (props) => {
                     value={props.value}
                     onChange={props.changed}
                     autoFocus={props.autoFocus}
-                    onClick={props.click}
+                    onClick={props.onClick}
                     onKeyUp={props.keyUp}
-                    onBlur={props.blur}
+                    onBlur={props.onBlur}
                     id={props.id}
                     ref={editInputElement}
                 />
@@ -55,9 +55,9 @@ const InputEl = (props) => {
                     value={props.value}
                     onChange={props.changed}
                     autoFocus={props.autoFocus}
-                    onClick={props.click}
+                    onClick={props.onClick}
                     onKeyUp={props.keyUp}
-                    onBlur={props.blur}
+                    onBlur={props.onBlur}
                 />
             );
     }
