@@ -33,6 +33,7 @@ const reducer = (state = initialState, action) => {
                 itemToEdit = {
                     name: action.payload.name,
                     id: action.payload.id,
+                    itemId: action.payload.itemId,
                 };
             } else {
                 itemToEdit = null;

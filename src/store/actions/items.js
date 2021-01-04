@@ -8,20 +8,34 @@ export const ON_DELETE_WARNING = 'ON_DELETE_WARNING';
 export const ON_DELETE_CONFIRMED = 'ON_DELETE_CONFIRMED';
 export const ON_TOGGLE_EDIT = 'ON_TOGGLE_EDIT';
 
-export const onSubmit = (event, item, selectedList) => {
+export const onSubmit = (type, event, item, selectedList) => {
     event.preventDefault();
-    return (dispatch) => {
-        axios
-            .post(`/lists/${selectedList[0]}/items/.json`, {
-                id: helpers.randomId(),
-                name: item,
-                checked: false,
-            })
-            .then((res) => {
-                dispatch(loadAllLists());
-            })
-            .catch((e) => console.log(e));
-    };
+    if (type === 'Update') {
+        return (dispatch) => {
+            axios
+                .patch(`/lists/${selectedList[0]}/items/${item.itemId}/.json`, {
+                    name: item.text,
+                })
+                .then((res) => {
+                    dispatch(loadAllLists());
+                })
+                .catch((e) => console.log(e));
+        };
+    } else {
+        console.log(`/lists/${selectedList[0]}/items/.json`);
+        return (dispatch) => {
+            axios
+                .post(`/lists/${selectedList[0]}/items/.json`, {
+                    id: helpers.randomId(),
+                    name: item.text,
+                    checked: false,
+                })
+                .then((res) => {
+                    dispatch(loadAllLists());
+                })
+                .catch((e) => console.log(e));
+        };
+    }
 };
 
 export const toggleCheck = (id, checked, selectedList) => {
@@ -37,8 +51,8 @@ export const toggleCheck = (id, checked, selectedList) => {
     };
 };
 
-export const toggleEdit = (name, id) => {
-    const setItemToEdit = name ? { name, id } : null;
+export const toggleEdit = (name, id, itemId) => {
+    const setItemToEdit = name ? { name, id, itemId } : null;
     return {
         type: ON_TOGGLE_EDIT,
         payload: setItemToEdit,

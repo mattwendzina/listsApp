@@ -70,7 +70,7 @@ const ListItems = (props) => {
                                 ? classes.checkedItem
                                 : classes.uncheckedItem
                         }
-                        onClick={() => toggleEdit(name, id)}
+                        onClick={() => toggleEdit(name, id, itemId)}
                     >
                         {name}
                     </li>

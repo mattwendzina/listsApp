@@ -3,7 +3,6 @@ import AddItem from '../../Components/AddItem/AddItem';
 import ListItems from '../../Components/ListItems/ListItems';
 import helpers from '../../helperFunctions';
 import { setList } from '../../store/actions/lists';
-import { onClearText } from '../../store/actions/input';
 import {
     deleteItem,
     deleteWarningMessage,
@@ -104,12 +103,7 @@ class ListView extends Component {
             <div>
                 <AddItem
                     newListEditMode={this.state.newListEditMode}
-                    value={this.props.input}
-                    editMode={this.props.editMode}
-                    update={this.props.update}
                     submitNewList={this.submitNewList}
-                    itemToEdit={this.props.itemToEdit}
-                    onClearText={this.props.onClearText}
                 />
                 <ListItems
                     selectedList={this.props.selectedList}
@@ -133,22 +127,17 @@ class ListView extends Component {
 const mapStateToProps = (state) => ({
     selectedList: state.lists.selectedList,
     deleteWarning: state.items.deleteWarning,
-    itemToEdit: state.items.itemToEdit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setList: (items) => dispatch(setList(items)),
     toggleCheck: (id, checked, selectedList) =>
         dispatch(toggleCheck(id, checked, selectedList)),
-    toggleEdit: (name, id) => dispatch(toggleEdit(name, id)),
+    toggleEdit: (name, id, itemId) => dispatch(toggleEdit(name, id, itemId)),
     deleteItem: (deleteWarning, selectedList, itemToDelete) =>
         dispatch(deleteItem(deleteWarning, selectedList, itemToDelete)),
     deleteWarningMessage: (deleteMessage) =>
         dispatch(deleteWarningMessage(deleteMessage)),
-    onClearText: () => {
-        dispatch(toggleEdit());
-        dispatch(onClearText());
-    },
 });
 
 const mergeProps = (state, dispatch, ownProps) => {

@@ -32,6 +32,7 @@ const InputEl = (props) => {
                     onClick={props.click}
                     onKeyUp={props.keyUp}
                     onBlur={props.blur}
+                    id={props.id}
                     ref={editInputElement}
                 />
             );
