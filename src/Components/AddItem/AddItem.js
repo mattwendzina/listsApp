@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { onSubmit } from '../../store/actions/items';
-
+import { onSubmit, toggleEdit } from '../../store/actions/items';
 import classes from './AddItem.module.css';
 import InputEl from '../UI/Input/InputEl';
 
 const AddItem = (props) => {
     const [text, updateText] = useState('');
+
+    useEffect(() => {
+        if (props.itemToEdit) {
+            updateText(props.itemToEdit.name);
+        }
+    }, [props.itemToEdit]);
 
     const inputChangedHandler = (event, inputIdentifier) => {
         const updatedInputForm = {
@@ -22,13 +27,13 @@ const AddItem = (props) => {
             updatedInputForm[inputIdentifier];
     };
 
-    const onTextChange = (event) => updateText(event.target.value);
-    // const onBlur = (input) => {
-    //     if (input.key && input.key !== 'Enter') {
-    //         return;
-    //     }
-    //     submitNewTitle();
-    // };
+    const onTextChange = (event) => {
+        if (event.key === 'Escape') {
+            updateText('');
+            props.onToggleEdit();
+        }
+        updateText(event.target.value);
+    };
 
     const inputElementsArray = [];
     for (let key in props.inputElements) {
@@ -37,40 +42,64 @@ const AddItem = (props) => {
             config: props.inputElements[key],
         });
     }
-
     return !props.newListEditMode ? (
         <form
             className={classes.addItemContainer}
-            onSubmit={(event) => onSubmit(event, text, props.selectedList)}
+            onSubmit={(event) => {
+                props.onSubmit(
+                    event.currentTarget[1].innerText,
+                    event,
+                    {
+                        text: text,
+                        itemId: props.itemToEdit
+                            ? props.itemToEdit.itemId
+                            : null,
+                    },
+                    props.selectedList
+                );
+                props.onToggleEdit();
+            }}
         >
-            <label htmlFor="input">Add Item</label>
-            {props.editMode.edit ? (
-                <input
-                    type="input"
-                    id="input"
-                    onChange={props.input}
-                    onKeyDown={props.update}
-                    value={props.value}
-                />
+            {props.itemToEdit ? (
+                <div>
+                    <label htmlFor="update">Update Item</label>
+                    <InputEl
+                        id="update"
+                        elementType="input"
+                        className="editItem"
+                        value={text}
+                        changed={onTextChange}
+                        keyUp={(e) => {
+                            if (e.key === 'Escape') {
+                                updateText('');
+                                props.onToggleEdit();
+                            }
+                        }}
+                        autoFocus
+                    />
+                    <button type="submit">Update</button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            updateText('');
+                            props.onToggleEdit();
+                        }}
+                    >
+                        Cancel
+                    </button>
+                </div>
             ) : (
-                <InputEl
-                    elementType="input"
-                    className="addItem"
-                    value={text}
-                    changed={onTextChange}
-                />
-            )}
-            {props.editMode.edit ? (
-                <button onClick={props.update}>Update</button>
-            ) : (
-                <button
-                    onClick={(event) => {
-                        props.onSubmit(event, text, props.selectedList);
-                        updateText('');
-                    }}
-                >
-                    Submit
-                </button>
+                <div>
+                    <label htmlFor="submit">Add Item</label>
+                    <InputEl
+                        id="submit"
+                        elementType="input"
+                        className="addItem"
+                        value={text}
+                        changed={onTextChange}
+                    />
+                    <button type="submit">Submit</button>
+                </div>
             )}
         </form>
     ) : (
@@ -100,13 +129,17 @@ const mapStateToProps = (state) => {
     return {
         inputText: state.input.inputText,
         selectedList: state.lists.selectedList,
+        itemToEdit: state.items.itemToEdit,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSubmit: (event, text, selectedList) =>
-            dispatch(onSubmit(event, text, selectedList)),
+        onSubmit: (type, event, text, selectedList) =>
+            dispatch(onSubmit(type, event, text, selectedList)),
+        onToggleEdit: () => {
+            dispatch(toggleEdit());
+        },
     };
 };
 

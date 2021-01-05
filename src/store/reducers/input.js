@@ -11,7 +11,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 inputText: action.payload,
             };
-
+        case actionTypes.ON_CLEAR_TEXT:
+            return {
+                ...state,
+                inputText: '',
+            };
         default:
             return state;
     }

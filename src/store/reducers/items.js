@@ -12,6 +12,7 @@ const initialState = {
     },
     inputText: '',
     deleteWarning: false,
+    itemToEdit: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -25,6 +26,21 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 deleteWarning: false,
+            };
+        case actionTypes.ON_TOGGLE_EDIT:
+            let itemToEdit;
+            if (action.payload && action.payload.name) {
+                itemToEdit = {
+                    name: action.payload.name,
+                    id: action.payload.id,
+                    itemId: action.payload.itemId,
+                };
+            } else {
+                itemToEdit = null;
+            }
+            return {
+                ...state,
+                itemToEdit: itemToEdit,
             };
         // case actionTypes.ADD_ITEM:
         //     return {

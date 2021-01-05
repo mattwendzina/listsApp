@@ -7,6 +7,7 @@ import {
     deleteItem,
     deleteWarningMessage,
     toggleCheck,
+    toggleEdit,
 } from '../../store/actions/items';
 import { connect } from 'react-redux';
 
@@ -85,20 +86,6 @@ class ListView extends Component {
             .catch((e) => console.log(e));
     };
 
-    toggleEdit = (item, id) => {
-        if (this.state.editMode.edit) {
-            this.setState({
-                input: '',
-                editMode: { edit: !this.state.editMode, id: null },
-            });
-            return;
-        }
-        this.setState({
-            input: item,
-            editMode: { edit: !this.state.editMode.edit, id: id },
-        });
-    };
-
     addItemToNewList = (item, id) => {
         const newItems = [...this.state.newListItems];
         newItems.push({
@@ -116,9 +103,6 @@ class ListView extends Component {
             <div>
                 <AddItem
                     newListEditMode={this.state.newListEditMode}
-                    value={this.props.input}
-                    editMode={this.props.editMode}
-                    update={this.props.update}
                     submitNewList={this.submitNewList}
                 />
                 <ListItems
@@ -149,23 +133,28 @@ const mapDispatchToProps = (dispatch) => ({
     setList: (items) => dispatch(setList(items)),
     toggleCheck: (id, checked, selectedList) =>
         dispatch(toggleCheck(id, checked, selectedList)),
-    deleteItem: (deleteWarning, selectedList, items, itemToDelete) =>
-        dispatch(deleteItem(deleteWarning, selectedList, items, itemToDelete)),
+    toggleEdit: (name, id, itemId) => dispatch(toggleEdit(name, id, itemId)),
+    deleteItem: (deleteWarning, selectedList, itemToDelete) =>
+        dispatch(deleteItem(deleteWarning, selectedList, itemToDelete)),
     deleteWarningMessage: (deleteMessage) =>
         dispatch(deleteWarningMessage(deleteMessage)),
 });
 
-const mergeProps = (state, dispatch, ownProps) => ({
-    items: state.selectedList
-        ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
-              const { name, id, checked } = state.selectedList[1].items[itemId];
-              return { name, id, checked, itemId };
-          })
-        : null,
-    ...state,
-    ...dispatch,
-    ...ownProps,
-});
+const mergeProps = (state, dispatch, ownProps) => {
+    return {
+        items: state.selectedList
+            ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
+                  const { name, id, checked } = state.selectedList[1].items[
+                      itemId
+                  ];
+                  return { name, id, checked, itemId };
+              })
+            : null,
+        ...state,
+        ...dispatch,
+        ...ownProps,
+    };
+};
 
 export default connect(
     mapStateToProps,

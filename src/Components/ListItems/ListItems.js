@@ -70,7 +70,7 @@ const ListItems = (props) => {
                                 ? classes.checkedItem
                                 : classes.uncheckedItem
                         }
-                        onClick={() => toggleEdit(name, id)}
+                        onClick={() => toggleEdit(name, id, itemId)}
                     >
                         {name}
                     </li>
@@ -125,12 +125,7 @@ const ListItems = (props) => {
             <Modal showModal={deleteWarning}>
                 <ConfirmDelete
                     confirmDelete={() =>
-                        deleteItem(
-                            deleteWarning,
-                            selectedList,
-                            items,
-                            itemToDelete
-                        )
+                        deleteItem(deleteWarning, selectedList, itemToDelete)
                     }
                     cancelDelete={() => deleteWarningMessage(false)}
                 />
