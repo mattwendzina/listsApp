@@ -25,21 +25,41 @@ export const loadAllLists = () => {
                 return dispatch(loadAllListsFailure('Failed to load lists'));
             }
             dispatch(loadAllListsRequest(res.data));
+            dispatch(setList(res.data));
         });
     };
 };
 
-export const setList = (lists, listId) => {
-    let selectedListId = listId;
-    let selectedList = Object.keys(lists[selectedListId]);
-
-    if (!listId) {
-        selectedListId = Object.keys(lists)[0];
-        selectedList = [selectedListId, lists[selectedListId]];
+export const setList = (lists, selectedListId) => {
+    let listId = selectedListId || Object.keys(lists)[0];
+    let { name, items, id } = Object.keys(lists).reduce((list, id) => {
+        if (id === selectedListId) {
+            return {
+                ...list,
+                ...lists[id],
+            };
+        }
+        return list;
+    }, {});
+    if (!selectedListId) {
+        id = lists[Object.keys(lists)[0]].id;
+        name = lists[Object.keys(lists)[0]].name;
+        items = lists[Object.keys(lists)[0]].items;
     }
 
     return {
         type: SET_LIST,
-        payload: selectedList,
+        payload: { name, items, id, listId },
+    };
+};
+
+export const setNewTitle = (listId, title) => {
+    return (dispatch) => {
+        axios
+            .patch(`/lists/${listId}/.json`, {
+                name: title,
+            })
+            .then((res) => console.log(res))
+            .catch((e) => console.log(e));
     };
 };
