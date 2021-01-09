@@ -1,4 +1,4 @@
-.appHeader {
+.toolbar {
     background-color: #282c34;
     height: 4em;
     display: flex;
@@ -74,13 +74,8 @@
 }
 
 @media (max-width: 750px) {
-    .appHeader {
+    .toolbar {
         flex-direction: column;
         height: 100%;
-    }
-
-    .navItems {
-        position: unset;
-        padding: 0 0 0.5em 0;
     }
 }
