@@ -1,0 +1,43 @@
+.titleContainer {
+    position: relative;
+    width: 15em;
+}
+
+.titleContainer > div {
+    width: inherit;
+}
+
+.titleContainer .editIcon,
+.titleContainer .saveIcon {
+    position: absolute;
+    right: 0;
+    font-size: 0.8em;
+    top: 5%;
+    transition: 200ms ease-in-out;
+    cursor: pointer;
+}
+
+.titleContainer .editIcon {
+    transform: scale(0);
+}
+
+.titleContainer:hover .editIcon {
+    transform: scale(1);
+}
+
+.titleContainer input {
+    font-size: 1.5em;
+    background: no-repeat;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    margin: 0.83em auto;
+    width: inherit;
+}
+
+.titleContainer input:focus {
+    outline: none;
+    background: #505050;
+    border-radius: 5px;
+}
