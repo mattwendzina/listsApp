@@ -11,11 +11,6 @@ import helpers from './helperFunctions';
 import { loadAllLists } from './store/actions/lists';
 class App extends Component {
     state = {
-        input: '',
-        itemId: null,
-        newListItems: [],
-        listItems: null,
-        listName: null,
         listId: null,
         allLists: [],
         itemToEdit: null,
@@ -90,37 +85,20 @@ class App extends Component {
             <div className="App">
                 {this.props.error ? <h1>{this.props.error}</h1> : null}
                 <Layout
-                    listName={this.state.listName}
+                    createNewList={this.createNewList}
+                    listName={
+                        this.props.selectedList && this.props.selectedList.name
+                    }
                     listId={this.state.listId}
                 >
-                    {/* <Header
-                        createNewList={this.createNewList}
-                        seeAllLists={this.seeAllLists}
-                        listName={this.state.listName}
-                        listId={this.state.listId}
-                    /> */}
                     <Route
                         path="/"
                         exact
                         component={() => (
-                            <ListView
-                                allLists={this.props.allLists}
-                                editMode={this.state.editMode}
-                                input={this.state.input}
-                            />
+                            <ListsOverview loadList={this.loadList} />
                         )}
                     />
-                    <Route
-                        path="/allLists"
-                        exact
-                        component={() => (
-                            <ListsOverview
-                                allLists={this.props.allLists}
-                                closeModal={this.closeModal}
-                                loadList={this.loadList}
-                            />
-                        )}
-                    />
+                    <Route path="/list" exact component={() => <ListView />} />
                 </Layout>
             </div>
         );
@@ -130,14 +108,25 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         allLists: state.lists.listItems,
+        selectedList: state.lists.selectedList,
         error: state.lists.errorMessage,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getAllLists: (items) => dispatch(loadAllLists(items)),
+        getAllLists: (items) => {
+            dispatch(loadAllLists(items));
+        },
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const mergeProps = (state, dispatch, ownProps) => {
+    return {
+        ...state,
+        ...dispatch,
+        ...ownProps,
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(App);
