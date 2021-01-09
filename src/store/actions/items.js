@@ -13,19 +13,22 @@ export const onSubmit = (type, event, item, selectedList) => {
     if (type === 'Update') {
         return (dispatch) => {
             axios
-                .patch(`/lists/${selectedList[0]}/items/${item.itemId}/.json`, {
-                    name: item.text,
-                })
+                .patch(
+                    `/lists/${selectedList.listId}/items/${item.itemId}/.json`,
+                    {
+                        name: item.text,
+                    }
+                )
                 .then((res) => {
                     dispatch(loadAllLists());
                 })
                 .catch((e) => console.log(e));
         };
     } else {
-        console.log(`/lists/${selectedList[0]}/items/.json`);
+        console.log(`/lists/${selectedList.listId}/items/.json`);
         return (dispatch) => {
             axios
-                .post(`/lists/${selectedList[0]}/items/.json`, {
+                .post(`/lists/${selectedList.listId}/items/.json`, {
                     id: helpers.randomId(),
                     name: item.text,
                     checked: false,
@@ -41,7 +44,7 @@ export const onSubmit = (type, event, item, selectedList) => {
 export const toggleCheck = (id, checked, selectedList) => {
     return (dispatch) => {
         axios
-            .patch(`/lists/${selectedList[0]}/items/${id}/.json`, {
+            .patch(`/lists/${selectedList.listId}/items/${id}/.json`, {
                 checked: !checked,
             })
             .then((res) => {
@@ -78,12 +81,11 @@ export const deleteItem = (deleteWarning, selectedList, itemToDelete) => {
             return dispatch(deleteWarningMessage(true));
         }
         // When 'items' is passed to ListItems.js as a prop, it's formed so that it includes itemId. The shape of data stored in Firebase is as such that it needs reshaping so that when the list is updated it's shape stays the same.
-        const formattedList = Object.keys(selectedList[1].items).map(
-            (itemId) => {
-                const { name, id, checked } = selectedList[1].items[itemId];
-                return { itemId, name, id, checked };
-            }
-        );
+        const formattedList = Object.keys(selectedList.items).map((itemId) => {
+            const { name, id, checked } = selectedList.items[itemId];
+            return { itemId, name, id, checked };
+        });
+
         const updatedList = formattedList.reduce((filteredList, item) => {
             if (item.id !== itemToDelete.id) {
                 return {
