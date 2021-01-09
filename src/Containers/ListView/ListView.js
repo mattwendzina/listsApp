@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import AddItem from '../../Components/AddItem/AddItem';
 import ListItems from '../../Components/ListItems/ListItems';
 import helpers from '../../helperFunctions';
-import { setList } from '../../store/actions/lists';
 import {
     deleteItem,
     deleteWarningMessage,
@@ -37,12 +36,6 @@ class ListView extends Component {
         },
         listItems: null,
     };
-
-    componentDidMount() {
-        if (this.props.allLists) {
-            this.props.setList(this.props.allLists);
-        }
-    }
 
     submitNewList = () => {
         axios
@@ -130,7 +123,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    setList: (items) => dispatch(setList(items)),
     toggleCheck: (id, checked, selectedList) =>
         dispatch(toggleCheck(id, checked, selectedList)),
     toggleEdit: (name, id, itemId) => dispatch(toggleEdit(name, id, itemId)),
@@ -143,8 +135,8 @@ const mapDispatchToProps = (dispatch) => ({
 const mergeProps = (state, dispatch, ownProps) => {
     return {
         items: state.selectedList
-            ? Object.keys(state.selectedList[1].items).map((itemId, idx) => {
-                  const { name, id, checked } = state.selectedList[1].items[
+            ? Object.keys(state.selectedList.items).map((itemId) => {
+                  const { name, id, checked } = state.selectedList.items[
                       itemId
                   ];
                   return { name, id, checked, itemId };
