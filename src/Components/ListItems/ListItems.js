@@ -56,7 +56,7 @@ const ListItems = (props) => {
                                 deleteItem(deleteWarning);
                                 setItemToDelete(() => ({
                                     id,
-                                    listId: selectedList[0],
+                                    listId: selectedList.listId,
                                 }));
                             }}
                         />
