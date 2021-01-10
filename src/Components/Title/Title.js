@@ -5,17 +5,26 @@ import InputEl from '../UI/Input/InputEl';
 
 const Title = (props) => {
     const [editMode, toggleEdit] = useState(false);
-    const [title, changeTitle] = useState();
+    const [title, setTitle] = useState();
+    const [updatedTitle, changeTitle] = useState();
+    const [newTitle, createNewTitle] = useState(false);
 
     useEffect(
         function loadTitle() {
-            changeTitle(props.listName);
+            setTitle(props.listName);
         },
         [props]
     );
 
-    const updateTitle = (e) => {
+    const updateTitleText = (e) => {
+        createNewTitle(false);
         changeTitle(e.target.value);
+        if (
+            (updatedTitle && updatedTitle.length <= 2) ||
+            e.target.value === ''
+        ) {
+            createNewTitle(true);
+        }
     };
 
     const editTitle = () => {
@@ -27,15 +36,16 @@ const Title = (props) => {
             (input.key && input.key === 'Enter') ||
             input.type === 'mousedown'
         ) {
-            props.setNewTitle(props.listId, title);
+            props.setNewTitle(props.listId, updatedTitle);
+            setTitle(updatedTitle);
             toggleEdit(!editMode);
         }
-        if (input.key && input.key === 'Escape') {
+        if ((input.key && input.key === 'Escape') || input.type === 'blur') {
             toggleEdit(!editMode);
+            changeTitle('');
         }
         return;
     };
-
     return (
         <div className={classes.titleContainer}>
             {!editMode ? (
@@ -46,8 +56,8 @@ const Title = (props) => {
                     autoFocus="autofocus"
                     onBlur={onUpdateTitle}
                     keyUp={onUpdateTitle}
-                    value={title}
-                    changed={updateTitle}
+                    value={updatedTitle || (newTitle ? '' : title)}
+                    changed={updateTitleText}
                     className="titleInput"
                 />
             )}
