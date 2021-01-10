@@ -25,7 +25,6 @@ export const onSubmit = (type, event, item, selectedList) => {
                 .catch((e) => console.log(e));
         };
     } else {
-        console.log(`/lists/${selectedList.listId}/items/.json`);
         return (dispatch) => {
             axios
                 .post(`/lists/${selectedList.listId}/items/.json`, {
@@ -34,7 +33,7 @@ export const onSubmit = (type, event, item, selectedList) => {
                     checked: false,
                 })
                 .then((res) => {
-                    dispatch(loadAllLists());
+                    dispatch(loadAllLists(selectedList.listId));
                 })
                 .catch((e) => console.log(e));
         };
@@ -48,7 +47,7 @@ export const toggleCheck = (id, checked, selectedList) => {
                 checked: !checked,
             })
             .then((res) => {
-                dispatch(loadAllLists());
+                dispatch(loadAllLists(selectedList.listId));
             })
             .catch((e) => console.log(e));
     };
@@ -105,7 +104,7 @@ export const deleteItem = (deleteWarning, selectedList, itemToDelete) => {
             })
             .then(() => {
                 dispatch(deleteConfirmed());
-                dispatch(loadAllLists());
+                dispatch(loadAllLists(itemToDelete.listId));
             })
             .catch((e) => console.log(e));
     };
