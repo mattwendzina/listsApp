@@ -18,14 +18,14 @@ export const loadAllListsFailure = (result) => {
     };
 };
 
-export const loadAllLists = () => {
+export const loadAllLists = (listId) => {
     return (dispatch) => {
         axios.get('/lists.json').then((res) => {
             if (!res.data) {
                 return dispatch(loadAllListsFailure('Failed to load lists'));
             }
             dispatch(loadAllListsRequest(res.data));
-            dispatch(setList(res.data));
+            dispatch(setList(res.data, listId));
         });
     };
 };
