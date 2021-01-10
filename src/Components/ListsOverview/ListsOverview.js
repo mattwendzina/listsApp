@@ -7,7 +7,6 @@ import classes from './ListsOverview.module.css';
 import { setList } from '../../store/actions/lists';
 
 const ListsOverview = (props) => {
-    console.log('PROPS: ', props);
     return (
         <div className={classes.listsOverview}>
             {props.allLists ? (
@@ -18,6 +17,7 @@ const ListsOverview = (props) => {
                                 key={listId}
                                 onClick={() => {
                                     props.setList(props.allLists, listId);
+                                    localStorage.setItem('listId', listId);
                                     props.history.push({
                                         pathname: '/list',
                                     });

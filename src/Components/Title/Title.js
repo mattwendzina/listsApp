@@ -23,7 +23,6 @@ const Title = (props) => {
     };
 
     const onUpdateTitle = (input) => {
-        debugger;
         if (
             (input.key && input.key === 'Enter') ||
             input.type === 'mousedown'

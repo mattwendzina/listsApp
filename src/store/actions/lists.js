@@ -31,6 +31,11 @@ export const loadAllLists = (listId) => {
 };
 
 export const setList = (lists, selectedListId) => {
+    if (!selectedListId && localStorage.getItem('listId')) {
+        selectedListId = localStorage.getItem('listId');
+    } else if (!selectedListId) {
+    }
+
     let listId = selectedListId || Object.keys(lists)[0];
     let { name, items, id } = Object.keys(lists).reduce((list, id) => {
         if (id === selectedListId) {
@@ -41,11 +46,6 @@ export const setList = (lists, selectedListId) => {
         }
         return list;
     }, {});
-    if (!selectedListId) {
-        id = lists[Object.keys(lists)[0]].id;
-        name = lists[Object.keys(lists)[0]].name;
-        items = lists[Object.keys(lists)[0]].items;
-    }
 
     return {
         type: SET_LIST,

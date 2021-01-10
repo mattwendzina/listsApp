@@ -1,6 +1,6 @@
 import axios from './axios-shoppingList';
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './App.css';
@@ -18,6 +18,9 @@ class App extends Component {
     };
 
     componentDidMount() {
+        if (!localStorage.getItem('listId')) {
+            this.props.history.push('/');
+        }
         this.props.getAllLists();
     }
 
@@ -69,17 +72,6 @@ class App extends Component {
             .catch((e) => console.log(e));
     };
 
-    loadList = (id) => {
-        const selectedList = this.state.allLists[id];
-
-        this.setState({
-            listItems: selectedList.items,
-            listName: selectedList.name,
-            listId: id,
-        });
-        this.closeModal();
-    };
-
     render() {
         return (
             <div className="App">
@@ -91,13 +83,7 @@ class App extends Component {
                     }
                     listId={this.state.listId}
                 >
-                    <Route
-                        path="/"
-                        exact
-                        component={() => (
-                            <ListsOverview loadList={this.loadList} />
-                        )}
-                    />
+                    <Route path="/" exact component={() => <ListsOverview />} />
                     <Route path="/list" exact component={() => <ListView />} />
                 </Layout>
             </div>
@@ -129,4 +115,6 @@ const mergeProps = (state, dispatch, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(App);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+);
