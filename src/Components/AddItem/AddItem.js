@@ -46,6 +46,7 @@ const AddItem = (props) => {
         <form
             className={classes.addItemContainer}
             onSubmit={(event) => {
+                updateText('');
                 props.onSubmit(
                     event.currentTarget[1].innerText,
                     event,
