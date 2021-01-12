@@ -9,7 +9,7 @@ const Menu = (props) => (
                 <Link to="/">See all lists</Link>
             </li>
             <li className={classes.newList} onClick={props.createNewList}>
-                <a href="/newList">New List</a>
+                <Link to="/newList">New List</Link>
             </li>
         </ul>
     </nav>
