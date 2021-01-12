@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import Layout from './Components/Layout/Layout';
 import ListView from './Containers/ListView/ListView';
-import ListsOverview from './Components/ListsOverview/ListsOverview';
+import ListsOverview from './Containers/ListsOverview/ListsOverview';
 import helpers from './helperFunctions';
 import { loadAllLists } from './store/actions/lists';
 class App extends Component {
