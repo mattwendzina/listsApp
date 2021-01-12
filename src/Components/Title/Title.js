@@ -9,12 +9,7 @@ const Title = (props) => {
     const [updatedTitle, changeTitle] = useState();
     const [newTitle, createNewTitle] = useState(false);
 
-    useEffect(
-        function loadTitle() {
-            setTitle(props.listName);
-        },
-        [props]
-    );
+    useEffect(() => setTitle(props.listName), [props]);
 
     const updateTitleText = (e) => {
         createNewTitle(false);
@@ -42,33 +37,43 @@ const Title = (props) => {
         }
         if ((input.key && input.key === 'Escape') || input.type === 'blur') {
             toggleEdit(!editMode);
+            createNewTitle(false);
             changeTitle('');
         }
         return;
     };
+
+    let header = <h2>{title}</h2>;
+    let editButton = null;
+
+    if (props.listId && editMode) {
+        header = (
+            <InputEl
+                elementType="input"
+                autoFocus="autofocus"
+                onBlur={onUpdateTitle}
+                keyUp={onUpdateTitle}
+                value={updatedTitle || (newTitle ? '' : title)}
+                changed={updateTitleText}
+                className="titleInput"
+            />
+        );
+    }
+
+    if (props.listId && !editMode) {
+        editButton = (
+            <FiEdit2 className={classes.editIcon} onClick={editTitle} />
+        );
+    } else if (props.listId && editMode) {
+        editButton = (
+            <FiSave className={classes.saveIcon} onMouseDown={onUpdateTitle} />
+        );
+    }
+
     return (
         <div className={classes.titleContainer}>
-            {!editMode ? (
-                <h2>{title}</h2>
-            ) : (
-                <InputEl
-                    elementType="input"
-                    autoFocus="autofocus"
-                    onBlur={onUpdateTitle}
-                    keyUp={onUpdateTitle}
-                    value={updatedTitle || (newTitle ? '' : title)}
-                    changed={updateTitleText}
-                    className="titleInput"
-                />
-            )}
-            {!editMode ? (
-                <FiEdit2 className={classes.editIcon} onClick={editTitle} />
-            ) : (
-                <FiSave
-                    className={classes.saveIcon}
-                    onMouseDown={onUpdateTitle}
-                />
-            )}
+            {header}
+            {editButton}
         </div>
     );
 };
