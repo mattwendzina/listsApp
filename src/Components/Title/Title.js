@@ -9,7 +9,7 @@ const Title = (props) => {
     const [updatedTitle, changeTitle] = useState();
     const [newTitle, createNewTitle] = useState(false);
 
-    useEffect(() => setTitle(props.listName), [props]);
+    useEffect(() => setTitle(props.title), [props]);
 
     const updateTitleText = (e) => {
         createNewTitle(false);
@@ -23,6 +23,7 @@ const Title = (props) => {
     };
 
     const editTitle = () => {
+        changeTitle(title);
         toggleEdit(!editMode);
     };
 
@@ -43,36 +44,38 @@ const Title = (props) => {
         return;
     };
 
-    let header = <h2>{title}</h2>;
     let editButton = null;
 
-    if (props.listId && editMode) {
-        header = (
-            <InputEl
-                elementType="input"
-                autoFocus="autofocus"
-                onBlur={onUpdateTitle}
-                keyUp={onUpdateTitle}
-                value={updatedTitle || (newTitle ? '' : title)}
-                changed={updateTitleText}
-                className="titleInput"
-            />
-        );
-    }
-
-    if (props.listId && !editMode) {
-        editButton = (
-            <FiEdit2 className={classes.editIcon} onClick={editTitle} />
-        );
-    } else if (props.listId && editMode) {
-        editButton = (
-            <FiSave className={classes.saveIcon} onMouseDown={onUpdateTitle} />
-        );
+    if (props.listId) {
+        if (!editMode) {
+            editButton = (
+                <FiEdit2 className={classes.editIcon} onClick={editTitle} />
+            );
+        } else {
+            editButton = (
+                <FiSave
+                    className={classes.saveIcon}
+                    onMouseDown={onUpdateTitle}
+                />
+            );
+        }
     }
 
     return (
         <div className={classes.titleContainer}>
-            {header}
+            {!editMode ? (
+                <h2>{title}</h2>
+            ) : (
+                <InputEl
+                    elementType="input"
+                    autoFocus="autofocus"
+                    onBlur={onUpdateTitle}
+                    keyUp={onUpdateTitle}
+                    value={updatedTitle || (newTitle ? '' : title)}
+                    changed={updateTitleText}
+                    className="titleInput"
+                />
+            )}
             {editButton}
         </div>
     );
