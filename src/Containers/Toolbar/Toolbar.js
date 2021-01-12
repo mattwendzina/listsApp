@@ -7,20 +7,37 @@ import Title from '../../Components/Title/Title';
 import Menu from '../../Components/Menu/Menu';
 import { setNewTitle } from '../../store/actions/lists';
 
-const Toolbar = (props) => (
-    <div className={classes.toolbar}>
-        {props.location.pathname === '/list' ? (
+const Toolbar = (props) => {
+    let title = null;
+    let listId = null;
+    if (props.selectedList) {
+        switch (props.location.pathname) {
+            case '/':
+                title = 'Please select a list';
+                break;
+            case '/list':
+                title = props.selectedList.name;
+                listId = props.selectedList.listId;
+                break;
+            case '/newList':
+                title = 'Create your new list!';
+                break;
+            default:
+                title = 'Please select a list';
+        }
+    }
+
+    return (
+        <div className={classes.toolbar}>
             <Title
-                listName={props.selectedList && props.selectedList.name}
-                listId={props.selectedList && props.selectedList.listId}
-                setNewTitle={props.setNewTitle}
+                title={title}
+                listId={listId}
+                setNewTitle={listId && props.setNewTitle}
             />
-        ) : (
-            <Title listName={'Please select a list'} />
-        )}
-        <Menu />
-    </div>
-);
+            <Menu />
+        </div>
+    );
+};
 
 const mapStateToProps = (state) => {
     return {
