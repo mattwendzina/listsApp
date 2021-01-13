@@ -93,7 +93,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        allLists: state.lists.listItems,
         selectedList: state.lists.selectedList,
         error: state.lists.errorMessage,
     };
