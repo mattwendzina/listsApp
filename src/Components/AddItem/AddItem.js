@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { onSubmit, toggleEdit } from '../../store/actions/items';
 import classes from './AddItem.module.css';
 import InputEl from '../UI/Input/InputEl';
+import Button from '../UI/Button/Button';
 
 const AddItem = (props) => {
     const [text, updateText] = useState('');
@@ -57,16 +58,18 @@ const AddItem = (props) => {
                         }}
                         autoFocus
                     />
-                    <button type="submit">Update</button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            updateText('');
-                            props.onToggleEdit();
-                        }}
-                    >
-                        Cancel
-                    </button>
+                    <div className={classes.buttonContainer}>
+                        <Button type="submit">Update</Button>
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                updateText('');
+                                props.onToggleEdit();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
             ) : (
                 <div>
@@ -78,7 +81,9 @@ const AddItem = (props) => {
                         value={text}
                         changed={onTextChange}
                     />
-                    <button type="submit">Submit</button>
+                    <Button type="submit" disabled={text ? false : true}>
+                        Add Item
+                    </Button>
                 </div>
             )}
         </form>
