@@ -2,16 +2,3 @@
     display: flex;
     justify-content: center;
 }
-
-.confirmDelete h3 {
-    margin: 0.5em;
-}
-
-.buttonContainer button {
-    margin: 1em;
-    padding: 0.2em 0.5em;
-    background: #282d33;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-}
