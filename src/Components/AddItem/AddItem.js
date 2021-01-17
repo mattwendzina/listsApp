@@ -26,9 +26,11 @@ const AddItem = (props) => {
         <form
             className={classes.addItemContainer}
             onSubmit={(event) => {
+                // Check whether it's updating an item or submitting a new one
+                const type = event.currentTarget[1].innerText;
                 updateText('');
                 props.onSubmit(
-                    event.currentTarget[1].innerText,
+                    type,
                     event,
                     {
                         text: text,
