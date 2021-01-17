@@ -94,10 +94,7 @@ class ListView extends Component {
     render() {
         return (
             <div>
-                <AddItem
-                    newListEditMode={this.state.newListEditMode}
-                    submitNewList={this.submitNewList}
-                />
+                <AddItem />
                 <ListItems
                     selectedList={this.props.selectedList}
                     items={this.props.items}
