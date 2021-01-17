@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './App.css';
-import Layout from './Components/Layout/Layout';
-import ListView from './Containers/ListView/ListView';
-import ListsOverview from './Containers/ListsOverview/ListsOverview';
 import helpers from './helperFunctions';
+import './App.css';
+import ListsOverview from './Containers/ListsOverview/ListsOverview';
+import NewList from './Containers/NewList/NewList';
+import ListView from './Containers/ListView/ListView';
+import Layout from './Components/Layout/Layout';
+
 import { loadAllLists } from './store/actions/lists';
 class App extends Component {
     state = {
@@ -85,6 +87,11 @@ class App extends Component {
                 >
                     <Route path="/" exact component={() => <ListsOverview />} />
                     <Route path="/list" exact component={() => <ListView />} />
+                    <Route
+                        path="/newList"
+                        exact
+                        component={() => <NewList />}
+                    />
                 </Layout>
             </div>
         );
