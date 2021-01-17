@@ -13,20 +13,6 @@ const AddItem = (props) => {
         }
     }, [props.itemToEdit]);
 
-    const inputChangedHandler = (event, inputIdentifier) => {
-        const updatedInputForm = {
-            ...props.inputElements,
-        };
-        // Needed in order to deep clone the object
-        const updatedFormElement = {
-            ...updatedInputForm[inputIdentifier],
-        };
-        updatedFormElement.value = event.target.value;
-        updatedInputForm[inputIdentifier] = updatedFormElement;
-        props.inputElements[inputIdentifier] =
-            updatedInputForm[inputIdentifier];
-    };
-
     const onTextChange = (event) => {
         if (event.key === 'Escape') {
             updateText('');
@@ -35,14 +21,7 @@ const AddItem = (props) => {
         updateText(event.target.value);
     };
 
-    const inputElementsArray = [];
-    for (let key in props.inputElements) {
-        inputElementsArray.push({
-            id: key,
-            config: props.inputElements[key],
-        });
-    }
-    return !props.newListEditMode ? (
+    return (
         <form
             className={classes.addItemContainer}
             onSubmit={(event) => {
