@@ -37,7 +37,7 @@ const ListsOverview = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        allLists: state.lists.listItems,
+        allLists: state.lists.allLists,
         selectedList: state.lists.selectedList,
         error: state.lists.errorMessage,
     };
