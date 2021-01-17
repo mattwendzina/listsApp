@@ -1,0 +1,29 @@
+.c-button {
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    border: none;
+    margin: 0 0.3em 0.3em 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #ffffff;
+    text-align: center;
+    transition: all 0.3s;
+    background: #0c74f1;
+    border-radius: 0.3em;
+    cursor: pointer;
+}
+
+.c-button:hover {
+    box-shadow: 1px 1px 5px black;
+}
+
+.c-button:disabled {
+    background: #bddbff;
+    cursor: default;
+}
+
+.c-button:disabled:hover {
+    box-shadow: none;
+}
