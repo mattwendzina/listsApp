@@ -89,26 +89,6 @@ const AddItem = (props) => {
                 </div>
             )}
         </form>
-    ) : (
-        <div className={classes.newListInputContainer}>
-            {inputElementsArray.map((inputElement) => {
-                if (inputElement.id === 'newList') {
-                    return (
-                        <InputEl
-                            key={inputElement.id}
-                            elementType={inputElement.config.elementType}
-                            elementConfig={inputElement.config.elementConfig}
-                            value={inputElement.config.value}
-                            changed={(event) =>
-                                inputChangedHandler(event, inputElement.id)
-                            }
-                        />
-                    );
-                }
-            })}
-            {/* <InputEl elementType="..." elementConfig="..." value="..." /> */}
-            <button onClick={props.submitNewList}>Create new List!</button>
-        </div>
     );
 };
 
