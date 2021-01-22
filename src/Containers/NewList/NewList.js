@@ -54,18 +54,14 @@ const NewList = () => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        ...state,
-    };
-};
+const mapStateToProps = (state) => ({
+    ...state,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getAllLists: (items) => {
-            dispatch(loadAllLists(items));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    getAllLists: (items) => {
+        dispatch(loadAllLists(items));
+    },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewList);
