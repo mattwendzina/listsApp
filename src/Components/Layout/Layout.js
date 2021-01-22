@@ -4,7 +4,7 @@ import Toolbar from '../../Containers/Toolbar/Toolbar';
 
 const Layout = (props) => (
     <Aux>
-        <Toolbar listName={props.listName} listId={props.listId} />
+        <Toolbar />
         <main>{props.children}</main>
     </Aux>
 );
