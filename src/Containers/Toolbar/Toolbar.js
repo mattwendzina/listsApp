@@ -39,16 +39,12 @@ const Toolbar = (props) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        selectedList: state.lists.selectedList,
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setNewTitle: (listId, title) => dispatch(setNewTitle(listId, title)),
-    };
-};
+const mapStateToProps = (state) => ({
+    selectedList: state.lists.selectedList,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setNewTitle: (listId, title) => dispatch(setNewTitle(listId, title)),
+});
 
 export default withRouter(
     connect(mapStateToProps, mapDispatchToProps)(Toolbar)
