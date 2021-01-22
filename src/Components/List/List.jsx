@@ -17,7 +17,11 @@ const List = (props) => {
         <div>
             <ul {...listProps}>
                 {props.items.map((item, idx) => (
-                    <ListItem key={idx} label={item} />
+                    <ListItem
+                        onClick={props.onClick}
+                        key={props.key || idx}
+                        label={item}
+                    />
                 ))}
             </ul>
         </div>
