@@ -7,7 +7,6 @@ export const ON_CHECK = 'ON_CHECK';
 export const ON_DELETE_WARNING = 'ON_DELETE_WARNING';
 export const ON_DELETE_CONFIRMED = 'ON_DELETE_CONFIRMED';
 export const ON_TOGGLE_EDIT = 'ON_TOGGLE_EDIT';
-export const ON_TOGGLE_CHECK = 'ON_TOGGLE_CHECK';
 
 export const onSubmit = (type, event, item, selectedList) => {
     event.preventDefault();
