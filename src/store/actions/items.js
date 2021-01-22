@@ -1,12 +1,13 @@
 import axios from '../../axios-shoppingList';
 import helpers from '../../helperFunctions';
-import { loadAllLists } from './lists';
+import { loadAllLists, setList } from './lists';
 
 export const ON_SUBMIT = 'ON_SUBMIT';
 export const ON_CHECK = 'ON_CHECK';
 export const ON_DELETE_WARNING = 'ON_DELETE_WARNING';
 export const ON_DELETE_CONFIRMED = 'ON_DELETE_CONFIRMED';
 export const ON_TOGGLE_EDIT = 'ON_TOGGLE_EDIT';
+export const ON_TOGGLE_CHECK = 'ON_TOGGLE_CHECK';
 
 export const onSubmit = (type, event, item, selectedList) => {
     event.preventDefault();
@@ -40,17 +41,34 @@ export const onSubmit = (type, event, item, selectedList) => {
     }
 };
 
-export const toggleCheck = (id, checked, selectedList) => {
-    return (dispatch) => {
-        axios
-            .patch(`/lists/${selectedList.listId}/items/${id}/.json`, {
-                checked: !checked,
-            })
-            .then((res) => {
-                dispatch(loadAllLists(selectedList.listId));
-            })
-            .catch((e) => console.log(e));
+export const toggleCheck = (id, checked, selectedList) => (dispatch) => {
+    const updatedItems = Object.keys(selectedList.items).reduce(
+        (list, item) => {
+            if (id === item) {
+                selectedList.items[item].checked = !checked;
+                return {
+                    ...list,
+                    [item]: selectedList.items[item],
+                };
+            }
+            return { ...list, [item]: selectedList.items[item] };
+        },
+        {}
+    );
+    const updatedList = {
+        ...selectedList,
+        items: updatedItems,
     };
+    dispatch(setList(updatedList, selectedList.listId));
+
+    axios
+        .patch(`/lists/${selectedList.listId}/items/${id}/.json`, {
+            checked: !checked,
+        })
+        .then((res) => {
+            dispatch(loadAllLists(selectedList.listId));
+        })
+        .catch((e) => console.log(e));
 };
 
 export const toggleEdit = (name, id, itemId) => {
@@ -61,12 +79,10 @@ export const toggleEdit = (name, id, itemId) => {
     };
 };
 
-export const deleteWarningMessage = (deleteMessageWarning) => {
-    return {
-        type: ON_DELETE_WARNING,
-        payload: deleteMessageWarning,
-    };
-};
+export const deleteWarningMessage = (deletionDetalis) => ({
+    type: ON_DELETE_WARNING,
+    payload: deletionDetalis,
+});
 
 export const deleteConfirmed = () => {
     return {
@@ -74,22 +90,18 @@ export const deleteConfirmed = () => {
     };
 };
 
-export const deleteItem = (deleteWarning, selectedList, itemToDelete) => {
-    return (dispatch) => {
-        if (!deleteWarning) {
-            return dispatch(deleteWarningMessage(true));
-        }
-        // When 'items' is passed to ListItems.js as a prop, it's formed so that it includes itemId. The shape of data stored in Firebase is as such that it needs reshaping so that when the list is updated it's shape stays the same.
-        const formattedList = Object.keys(selectedList.items).map((itemId) => {
-            const { name, id, checked } = selectedList.items[itemId];
-            return { itemId, name, id, checked };
-        });
-
-        const updatedList = formattedList.reduce((filteredList, item) => {
-            if (item.id !== itemToDelete.id) {
+export const deleteItem = (selectedList, itemToDelete) => (
+    dispatch,
+    getState
+) => {
+    const listId = getState().lists.selectedList.listId;
+    const updatedList = Object.keys(selectedList.items).reduce(
+        (filteredList, itemId) => {
+            const item = selectedList.items[itemId];
+            if (item.id !== itemToDelete) {
                 return {
                     ...filteredList,
-                    [item.itemId]: {
+                    [itemId]: {
                         id: item.id,
                         name: item.name,
                         checked: item.checked,
@@ -97,15 +109,17 @@ export const deleteItem = (deleteWarning, selectedList, itemToDelete) => {
                 };
             }
             return filteredList;
-        }, {});
-        axios
-            .patch(`/lists/${itemToDelete.listId}/.json`, {
-                items: updatedList,
-            })
-            .then(() => {
-                dispatch(deleteConfirmed());
-                dispatch(loadAllLists(itemToDelete.listId));
-            })
-            .catch((e) => console.log(e));
-    };
+        },
+        {}
+    );
+
+    axios
+        .patch(`/lists/${listId}/.json`, {
+            items: updatedList,
+        })
+        .then(() => {
+            dispatch(deleteConfirmed());
+            dispatch(loadAllLists(itemToDelete.listId));
+        })
+        .catch((e) => console.log(e));
 };
