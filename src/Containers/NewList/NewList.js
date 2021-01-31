@@ -21,12 +21,9 @@ const NewList = () => {
     };
 
     const addNewItem = () => {
-        const updatedItems = [...items];
-        updatedItems.push(text);
-        addItem(updatedItems);
+        addItem((prevState) => [...prevState, { name: text }]);
         updateText('');
     };
-
     return (
         <div>
             <form onSubmit={submit}>
