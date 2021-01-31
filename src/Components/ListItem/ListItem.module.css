@@ -1,4 +1,23 @@
+.listItemContainer {
+    display: flex;
+}
+
 .listItem {
-    width: 20%;
     margin: 0 auto;
+    list-style-type: none;
+}
+
+.listItem.checkedItem {
+    list-style-type: none;
+    margin: 5px 0;
+    color: black;
+    text-decoration: line-through;
+    cursor: pointer;
+}
+
+.listItem.uncheckedItem {
+    list-style-type: none;
+    margin: 5px 0;
+    color: red;
+    cursor: pointer;
 }
