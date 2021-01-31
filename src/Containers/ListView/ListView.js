@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AddItem from '../../Components/AddItem/AddItem';
-import ListItems from '../../Components/ListItems/ListItems';
+import List from '../../Components/List/List';
 import helpers from '../../helperFunctions';
 import {
     deleteItem,
@@ -11,26 +11,25 @@ import {
 import { setList } from '../../store/actions/lists';
 import { connect } from 'react-redux';
 
-class ListView extends Component {
-    render() {
-        return (
-            <div>
-                <AddItem />
-                <ListItems
-                    selectedList={this.props.selectedList}
-                    items={this.props.items}
-                    itemToDelete={this.props.itemToDelete}
-                    toggleCheck={this.props.toggleCheck}
-                    toggleEdit={this.props.toggleEdit}
-                    deleteItem={this.props.deleteItem}
-                    deleteWarning={this.props.deleteWarning}
-                    deleteWarningMessage={this.props.deleteWarningMessage}
-                    addItemToNewList={this.addItemToNewList}
-                />
-            </div>
-        );
-    }
-}
+const ListView = (props) => {
+    return (
+        <div>
+            <AddItem />
+            <List
+                viewList
+                selectedList={props.selectedList}
+                items={props.items}
+                itemToDelete={props.itemToDelete}
+                toggleCheck={props.toggleCheck}
+                onClick={props.toggleEdit}
+                deleteItem={props.deleteItem}
+                deleteWarning={props.deleteWarning}
+                deleteWarningMessage={props.deleteWarningMessage}
+                addItemToNewList={props.addItemToNewList}
+            />
+        </div>
+    );
+};
 
 const mapStateToProps = (state) => ({
     allLists: state.lists.allLists,
