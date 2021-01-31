@@ -8,103 +8,18 @@ import {
     toggleCheck,
     toggleEdit,
 } from '../../store/actions/items';
+import { setList } from '../../store/actions/lists';
 import { connect } from 'react-redux';
 
-import axios from '../../axios-shoppingList';
-
 class ListView extends Component {
-    state = {
-        input: '',
-        newListEditMode: false,
-        inputElements: {
-            newItem: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'text',
-                    placeholder: 'New Item',
-                },
-                value: { id: helpers.randomId(), name: null, checked: false },
-            },
-            newList: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'text',
-                    placeholder: 'New Item',
-                },
-                value: null,
-            },
-        },
-        listItems: null,
-    };
-
-    submitNewList = () => {
-        axios
-            .post('/lists.json', {
-                name: this.state.inputElements.newList.value,
-                items: this.state.newListItems,
-                itemId: helpers.randomId(),
-            })
-            .then((res) => {
-                this.getLists(this.state.listId);
-                this.setState(
-                    {
-                        inputElements: {
-                            newItem: {
-                                elementType: 'input',
-                                elementConfig: {
-                                    type: 'text',
-                                    placeholder: 'New Item',
-                                },
-                                value: {
-                                    itemId: helpers.randomId(),
-                                    item: null,
-                                    checked: false,
-                                },
-                            },
-                            newList: {
-                                elementType: 'input',
-                                elementConfig: {
-                                    type: 'text',
-                                    placeholder: 'New Item',
-                                },
-                                value: null,
-                            },
-                        },
-                    },
-                    () => {
-                        console.log('this.state post submit', this.state);
-                    }
-                );
-            })
-            .catch((e) => console.log(e));
-    };
-
-    addItemToNewList = (item, id) => {
-        const newItems = [...this.state.newListItems];
-        newItems.push({
-            itemId: helpers.randomId(),
-            name: item,
-            checked: false,
-        });
-        this.setState({
-            newListItems: newItems,
-        });
-    };
-
     render() {
         return (
             <div>
-                <AddItem
-                    newListEditMode={this.state.newListEditMode}
-                    submitNewList={this.submitNewList}
-                />
+                <AddItem />
                 <ListItems
                     selectedList={this.props.selectedList}
                     items={this.props.items}
-                    deleteConfirmationWarning={
-                        this.state.deleteConfirmationWarning
-                    }
-                    newListEditMode={this.state.newListEditMode}
+                    itemToDelete={this.props.itemToDelete}
                     toggleCheck={this.props.toggleCheck}
                     toggleEdit={this.props.toggleEdit}
                     deleteItem={this.props.deleteItem}
@@ -118,8 +33,10 @@ class ListView extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    allLists: state.lists.allLists,
     selectedList: state.lists.selectedList,
     deleteWarning: state.items.deleteWarning,
+    itemToDelete: state.items.itemToDelete,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -130,23 +47,24 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(deleteItem(deleteWarning, selectedList, itemToDelete)),
     deleteWarningMessage: (deleteMessage) =>
         dispatch(deleteWarningMessage(deleteMessage)),
+    setList: (list, listId) => dispatch(setList(list, listId)),
 });
 
-const mergeProps = (state, dispatch, ownProps) => {
-    return {
-        items: state.selectedList
+const mergeProps = (state, dispatch, ownProps) => ({
+    items:
+        state.selectedList && state.selectedList.items
             ? Object.keys(state.selectedList.items).map((itemId) => {
+                  console.log('ITEM ID: ', itemId);
                   const { name, id, checked } = state.selectedList.items[
                       itemId
                   ];
                   return { name, id, checked, itemId };
               })
             : null,
-        ...state,
-        ...dispatch,
-        ...ownProps,
-    };
-};
+    ...state,
+    ...dispatch,
+    ...ownProps,
+});
 
 export default connect(
     mapStateToProps,

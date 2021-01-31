@@ -16,7 +16,10 @@ const ListsOverview = (props) => {
                             <li
                                 key={listId}
                                 onClick={() => {
-                                    props.setList(props.allLists, listId);
+                                    props.setList(
+                                        props.allLists[listId],
+                                        listId
+                                    );
                                     localStorage.setItem('listId', listId);
                                     props.history.push({
                                         pathname: '/list',
@@ -35,19 +38,13 @@ const ListsOverview = (props) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        allLists: state.lists.listItems,
-        selectedList: state.lists.selectedList,
-        error: state.lists.errorMessage,
-    };
-};
+const mapStateToProps = (state) => ({
+    allLists: state.lists.allLists,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setList: (items, itemId) => dispatch(setList(items, itemId)),
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    setList: (items, itemId) => dispatch(setList(items, itemId)),
+});
 
 export default withRouter(
     connect(mapStateToProps, mapDispatchToProps)(ListsOverview)

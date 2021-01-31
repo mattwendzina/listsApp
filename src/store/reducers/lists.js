@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/lists';
 
 const initialState = {
-    listItems: null,
+    allLists: null,
     errorMessage: null,
     selectedList: null,
 };
@@ -11,7 +11,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.LOAD_ALL_LISTS:
             return {
                 ...state,
-                listItems: action.payload,
+                allLists: action.payload,
                 errorMessage: null,
             };
         case actionTypes.LOAD_ALL_LISTS_FAILURE:

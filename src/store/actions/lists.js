@@ -18,48 +18,36 @@ export const loadAllListsFailure = (result) => {
     };
 };
 
-export const loadAllLists = (listId) => {
-    return (dispatch) => {
-        axios.get('/lists.json').then((res) => {
-            if (!res.data) {
-                return dispatch(loadAllListsFailure('Failed to load lists'));
-            }
+export const loadAllLists = (listId) => (dispatch) => {
+    axios.get('/lists.json').then((res) => {
+        if (!res.data) {
+            return dispatch(loadAllListsFailure('Failed to load lists'));
+        } else {
             dispatch(loadAllListsRequest(res.data));
-            dispatch(setList(res.data, listId));
-        });
-    };
+            if (localStorage.getItem('listId')) {
+                dispatch(
+                    setList(
+                        res.data[localStorage.getItem('listId')],
+                        localStorage.getItem('listId')
+                    )
+                );
+            }
+        }
+    });
 };
 
-export const setList = (lists, selectedListId) => {
-    if (!selectedListId && localStorage.getItem('listId')) {
-        selectedListId = localStorage.getItem('listId');
-    } else if (!selectedListId) {
-    }
-
-    let listId = selectedListId || Object.keys(lists)[0];
-    let { name, items, id } = Object.keys(lists).reduce((list, id) => {
-        if (id === selectedListId) {
-            return {
-                ...list,
-                ...lists[id],
-            };
-        }
-        return list;
-    }, {});
-
+export const setList = (selectedList, listId) => {
     return {
         type: SET_LIST,
-        payload: { name, items, id, listId },
+        payload: { ...selectedList, listId: listId },
     };
 };
 
-export const setNewTitle = (listId, title) => {
-    return (dispatch) => {
-        axios
-            .patch(`/lists/${listId}/.json`, {
-                name: title,
-            })
-            .then((res) => console.log(res))
-            .catch((e) => console.log(e));
-    };
+export const setNewTitle = (listId, title) => (dispatch) => {
+    axios
+        .patch(`/lists/${listId}/.json`, {
+            name: title,
+        })
+        .then((res) => console.log(res))
+        .catch((e) => console.log(e));
 };

@@ -13,6 +13,7 @@ const initialState = {
     inputText: '',
     deleteWarning: false,
     itemToEdit: null,
+    itemToDelete: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -20,7 +21,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ON_DELETE_WARNING:
             return {
                 ...state,
-                deleteWarning: action.payload,
+                deleteWarning: action.payload.deleteWarning,
+                itemToDelete: action.payload.id,
             };
         case actionTypes.ON_DELETE_CONFIRMED:
             return {
@@ -42,21 +44,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 itemToEdit: itemToEdit,
             };
-        // case actionTypes.ADD_ITEM:
-        //     return {
-        //         ...state,
-        //         newItem: {
-        //             ...state.newItem,
-        //             elementConfig: {
-        //                 ...state.newItem.elementConfig,
-        //             },
-        //             value: {
-        //                 ...state.newItem.value,
-        //                 name: action.name,
-        //                 checked: true,
-        //             },
-        //         },
-        //     };
         default:
             return state;
     }

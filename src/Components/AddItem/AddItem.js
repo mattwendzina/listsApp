@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { onSubmit, toggleEdit } from '../../store/actions/items';
 import classes from './AddItem.module.css';
 import InputEl from '../UI/Input/InputEl';
+import Button from '../UI/Button/Button';
 
 const AddItem = (props) => {
     const [text, updateText] = useState('');
@@ -13,20 +14,6 @@ const AddItem = (props) => {
         }
     }, [props.itemToEdit]);
 
-    const inputChangedHandler = (event, inputIdentifier) => {
-        const updatedInputForm = {
-            ...props.inputElements,
-        };
-        // Needed in order to deep clone the object
-        const updatedFormElement = {
-            ...updatedInputForm[inputIdentifier],
-        };
-        updatedFormElement.value = event.target.value;
-        updatedInputForm[inputIdentifier] = updatedFormElement;
-        props.inputElements[inputIdentifier] =
-            updatedInputForm[inputIdentifier];
-    };
-
     const onTextChange = (event) => {
         if (event.key === 'Escape') {
             updateText('');
@@ -35,20 +22,15 @@ const AddItem = (props) => {
         updateText(event.target.value);
     };
 
-    const inputElementsArray = [];
-    for (let key in props.inputElements) {
-        inputElementsArray.push({
-            id: key,
-            config: props.inputElements[key],
-        });
-    }
-    return !props.newListEditMode ? (
+    return (
         <form
             className={classes.addItemContainer}
             onSubmit={(event) => {
+                // Check whether it's updating an item or submitting a new one
+                const type = event.currentTarget[1].innerText;
                 updateText('');
                 props.onSubmit(
-                    event.currentTarget[1].innerText,
+                    type,
                     event,
                     {
                         text: text,
@@ -78,16 +60,18 @@ const AddItem = (props) => {
                         }}
                         autoFocus
                     />
-                    <button type="submit">Update</button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            updateText('');
-                            props.onToggleEdit();
-                        }}
-                    >
-                        Cancel
-                    </button>
+                    <div className={classes.buttonContainer}>
+                        <Button type="submit">Update</Button>
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                updateText('');
+                                props.onToggleEdit();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
             ) : (
                 <div>
@@ -99,30 +83,12 @@ const AddItem = (props) => {
                         value={text}
                         changed={onTextChange}
                     />
-                    <button type="submit">Submit</button>
+                    <Button type="submit" disabled={text ? false : true}>
+                        Add Item
+                    </Button>
                 </div>
             )}
         </form>
-    ) : (
-        <div className={classes.newListInputContainer}>
-            {inputElementsArray.map((inputElement) => {
-                if (inputElement.id === 'newList') {
-                    return (
-                        <InputEl
-                            key={inputElement.id}
-                            elementType={inputElement.config.elementType}
-                            elementConfig={inputElement.config.elementConfig}
-                            value={inputElement.config.value}
-                            changed={(event) =>
-                                inputChangedHandler(event, inputElement.id)
-                            }
-                        />
-                    );
-                }
-            })}
-            {/* <InputEl elementType="..." elementConfig="..." value="..." /> */}
-            <button onClick={props.submitNewList}>Create new List!</button>
-        </div>
     );
 };
 
