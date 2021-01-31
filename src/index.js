@@ -11,6 +11,8 @@ import * as serviceWorker from './serviceWorker';
 import inputReducer from './store/reducers/input';
 import itemsReducer from './store/reducers/items';
 import listsReducer from './store/reducers/lists';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const logger = (store) => {
     return (next) => {
@@ -37,7 +39,9 @@ const store = createStore(
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
-            <App />
+            <DndProvider backend={HTML5Backend}>
+                <App />
+            </DndProvider>
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')
